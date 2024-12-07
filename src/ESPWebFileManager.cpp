@@ -1,4 +1,9 @@
-/*
+/* 
+ * EspWebFileManager Library
+ * Copyright (C) 2024 Your Name
+ * Licensed under the Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International (CC BY-NC-SA 4.0)
+ * You may not use this work for commercial purposes. Modifications must credit the original author.
+ * See the LICENSE file for more details.
  * Project Name: ESPWebFileManager Library
  * Project Brief: ESPWebFileManager Library
  * Author: Jobit Joseph @ https://github.com/jobitjoseph
