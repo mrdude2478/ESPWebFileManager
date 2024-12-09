@@ -10,8 +10,8 @@
 ## Installation
 
 ### Arduino IDE
-1. Download the zip file and install it using `Sketch -> Include Library -> Add .ZIP Library` or Extract the zip file to the Arduino libraries folder.
-
+1. Through Arduino Library Manager: In the Arduino library manager search for ESPWebFileManager and install.
+1. Manual Installation: Download the zip file and install it using `Sketch -> Include Library -> Add .ZIP Library` or Extract the zip file to the Arduino libraries folder.
 ### PlatformIO
 1. Add the library to your `platformio.ini`:
    ```ini
