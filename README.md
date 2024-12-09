@@ -22,11 +22,8 @@
     
 Check the Example file provided. To use change the filesystem type on the function call`fileManager.initFileSystem(ESPWebFileManager::FS_SPIFFS, true)`. Valid file system types are `FS_SD_CARD, FS_SPIFFS, FS_LITTLEFS, FS_FATFS`. For the SD Card CS pin needs to be changed within the library. :
    ```ini
-   lib_deps =
-       https://github.com/jobitjoseph/ESPWebFileManager.git
-    ```ini
-   lib_deps =
-       fileManager.initFileSystem(ESPWebFileManager::FS_SPIFFS, true)
+   fileManager.initFileSystem(ESPWebFileManager::FS_SPIFFS, true)
+    
 After uploading the code you can access the file manager through the URL `http:ipadrees/file`. for eg `192.168.0.124/file`
 ## Issues and Warnings
     Don't use files with longer file names.
