@@ -20,7 +20,10 @@
 
 ## Usage 
     
-Check the Example file provided. To use change the filesystem type on the function call`fileManager.initFileSystem(ESPWebFileManager::FS_SPIFFS, true)`. Valid file system types are `FS_SD_CARD, FS_SPIFFS, FS_LITTLEFS, FS_FATFS`. For the SD Card CS pin needs to be changed within the library. 
+Check the Example file provided. To use change the filesystem type on the function call`fileManager.initFileSystem(ESPWebFileManager::FS_SPIFFS, true)`. Valid file system types are `FS_SD_CARD, FS_SPIFFS, FS_LITTLEFS, FS_FATFS`. For the SD Card CS pin needs to be changed within the library. :
+   ```ini
+   lib_deps =
+       https://github.com/jobitjoseph/ESPWebFileManager.git
     ```ini
    lib_deps =
        fileManager.initFileSystem(ESPWebFileManager::FS_SPIFFS, true)
