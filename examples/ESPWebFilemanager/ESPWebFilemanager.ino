@@ -38,11 +38,17 @@
 #include <ESPWebFileManager.h>
 #include <ESPAsyncWebServer.h>
 
+/*ESPWebFileManager Constructor*/
+/*File System eg. FS_SPIFFS, Format the file system if mounting failed  true/false, (for FS_SD only)Reconfig SPI pins true/false, SPI pin CS, MOSI, MISO, SCK*/
+//ESPWebFileManager fileManager(FS_SPIFFS, true);// FS_SPIFFS, true / false
+ESPWebFileManager fileManager(FS_LITTLEFS, true);// FS_LITTLEFS, true / false
+//ESPWebFileManager fileManager(FS_FATFS, true);// FS_FATFS, true / false
+//ESPWebFileManager fileManager(FS_SD, true, false, 25);// FS_SD, true / false, CS 
+//ESPWebFileManager fileManager(FS_SD, true, true, 25, 23, 19, 18); // FS_SD, true / false, CS , MOSI, MISO, SCK
 #define DEBUG_SERIAL Serial
-const char *ssid = "WiFi SSID";
-const char *password = "WiFi Password";
+const char *ssid = "Semicon Media";
+const char *password = "cracksen1605";
 AsyncWebServer server(80);
-ESPWebFileManager fileManager;
 
 void setup() {
     DEBUG_SERIAL.begin(115200);
@@ -58,7 +64,7 @@ void setup() {
     DEBUG_SERIAL.println(WiFi.localIP());
 
     // Initialize SPIFFS (Change to other types as needed, Valid types: FS_SD_CARD, FS_SPIFFS, FS_LITTLEFS, FS_FATFS )
-    if (!fileManager.initFileSystem(ESPWebFileManager::FS_SPIFFS, true)) {
+    if (!fileManager.begin()) {
         DEBUG_SERIAL.println("Failed to initialize file system");
     }
 
