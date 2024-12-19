@@ -1,7 +1,7 @@
 # ESPWebFileManager
 
 **EspWebFileManager** is a library that manages various file systems and provides file management over a web interface for ESP32. With the **EspWebFileManager** library, you will get a  responsive interface that allows you to upload, download, and delete files stored on the ESP32's filesystem. The **EspWebFileManager** library supports multiple file systems like SD Card, SPIFFS, LittleFS, and FATfs on ESP32.
-<img src="https://github.com/jobitjoseph/ESPWebFileManager/blob/main/Images/Desktop.png" width="" alt="alt_text" title="image_tooltip">
+<img src="https://github.com/jobitjoseph/ESPWebFileManager/blob/main/Images/Desktop.jpg" width="" alt="alt_text" title="image_tooltip">
 <img src="https://github.com/jobitjoseph/ESPWebFileManager/blob/main/Images/Phone.jpg" width="" alt="alt_text" title="image_tooltip">
 
 ## Features
