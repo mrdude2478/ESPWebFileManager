@@ -1,11 +1,12 @@
 # ESPWebFileManager
 
-**EspWebFileManager** is a library that manages various file systems and provides file management over a web interface for ESP32. With the **EspWebFileManager** library, you will get a  responsive interface that allows you to upload, download, and delete files stored on the ESP32's filesystem. The **EspWebFileManager** library supports multiple file systems like SD Card, SPIFFS, LittleFS, and FATfs on ESP32.
+**EspWebFileManager** is a library that manages various file systems and provides file management over a web interface for ESP32. With the **EspWebFileManager** library, you will get a  responsive interface that allows you to upload, download, and delete files stored on the ESP32's filesystem. Now Supports folders too. You can create or delete folders on LittleFS, FAT FS or SD card. Folders are not supported on SPIFFS. The **EspWebFileManager** library supports multiple file systems like SD Card, SPIFFS, LittleFS, and FATfs on ESP32.
 <img src="https://github.com/jobitjoseph/ESPWebFileManager/blob/main/Images/Desktop.jpg" width="" alt="alt_text" title="image_tooltip">
 <img src="https://github.com/jobitjoseph/ESPWebFileManager/blob/main/Images/Phone.jpg" width="" alt="alt_text" title="image_tooltip">
 
 ## Features
 - **File Management:** web interface for file management tasks such as upload, download, and delete.
+- - **Folder Management:** You can create or delete folders on LittleFS, FAT FS or SD card. Folders are not supported on SPIFFS.
 
 ## Installation
 
@@ -20,9 +21,14 @@
 
 ## Usage 
     
-Check the Example file provided. To use change the filesystem type on the function call`fileManager.initFileSystem(ESPWebFileManager::FS_SPIFFS, true)`. Valid file system types are `FS_SD_CARD, FS_SPIFFS, FS_LITTLEFS, FS_FATFS`. For the SD Card CS pin needs to be changed within the library. :
+Check the Example file provided. Libraray usage is now much easier. All you have to do is create the proper constructor at the start of the sketch and call the begin function in the setup. :
    ```cpp
-   fileManager.initFileSystem(ESPWebFileManager::FS_SPIFFS, true)
+   /*File System eg. FS_SPIFFS, Format the file system if mounting failed  true/false, (for FS_SD only)Reconfig SPI pins true/false, SPI pin CS, MOSI, MISO, SCK*/
+   //ESPWebFileManager fileManager(FS_SPIFFS, true);// FS_SPIFFS, true / false
+   ESPWebFileManager fileManager(FS_LITTLEFS, true);// FS_LITTLEFS, true / false
+   //ESPWebFileManager fileManager(FS_FATFS, true);// FS_FATFS, true / false
+   //ESPWebFileManager fileManager(FS_SD, true, false, 25);// FS_SD, true / false, CS // if you don't want to change the cs pin use -1 instead
+   //ESPWebFileManager fileManager(FS_SD, true, true, 25, 23, 19, 18); // FS_SD, true / false, CS , MOSI, MISO, SCK
 ```
 
 After uploading the code you can access the file manager through the URL `http:ipadrees/file`. for eg `192.168.0.124/file`
