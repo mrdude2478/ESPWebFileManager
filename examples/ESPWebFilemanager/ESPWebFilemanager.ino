@@ -4,9 +4,9 @@
  * Author: Jobit Joseph @ https://github.com/jobitjoseph
  * IDE: Arduino IDE 2.x.x
  * Arduino Core: ESP32 Arduino Core V 3.0.7
- * Dependencies : ESPWebFileManager Library V 1.4.2 @ https://github.com/jobitjoseph/ESPWebFileManager
-                  Async TCP Library for ESP32 V 3.2.14 @ https://github.com/mathieucarbou/AsyncTCP
- *                ESPAsyncWebServer Library V 2.2.6 @ https://github.com/mathieucarbou/ESPAsyncWebServer
+ * Dependencies: ESPWebFileManager Library V 1.4.3 @ https://github.com/jobitjoseph/ESPWebFileManager
+                 Async TCP Library for ESP32 V 3.2.14 @ https://github.com/mathieucarbou/AsyncTCP
+ *               ESPAsyncWebServer Library V 2.2.6 @ https://github.com/mathieucarbou/ESPAsyncWebServer
  * Copyright © Jobit Joseph
  * 
  * This code is licensed under the following conditions:
