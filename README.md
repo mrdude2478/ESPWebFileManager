@@ -40,9 +40,10 @@ Call the begin function in the setup. :
 
 After uploading the code you can access the file manager through the URL `http:ipadrees/file`. for eg `192.168.0.124/file`
 ## Issues and Warnings
-    Don't use files with longer file names.
+    Don't use files with way too long file names.
 
 ## To Do
+    SD MMC support
     File search Add a search bar to filter files and folders by name dynamically.
     Sorting
     Rename files
@@ -52,7 +53,6 @@ After uploading the code you can access the file manager through the URL `http:i
     File Metadata
     Edit file within the web UI
     Real-Time Updates
-    Folder Management: Add the ability to create, rename, and delete folders.
     ̌File preview Preview text files (e.g., .txt, .log) without downloading., Display image files (e.g., .jpg, .png) directly in the browser.
     File system stats
     
