@@ -31,6 +31,13 @@ Check the Example file provided. Libraray usage is now much easier. All you have
    //ESPWebFileManager fileManager(FS_SD, true, true, 25, 23, 19, 18); // FS_SD, true / false, CS , MOSI, MISO, SCK
 ```
 
+    
+Call the begin function in the setup. :
+   ```cpp
+   fileManager.begin()
+```
+
+
 After uploading the code you can access the file manager through the URL `http:ipadrees/file`. for eg `192.168.0.124/file`
 ## Issues and Warnings
     Don't use files with longer file names.
