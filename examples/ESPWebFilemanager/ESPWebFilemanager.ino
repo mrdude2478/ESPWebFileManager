@@ -46,8 +46,8 @@ ESPWebFileManager fileManager(FS_LITTLEFS, true);// FS_LITTLEFS, true / false
 //ESPWebFileManager fileManager(FS_SD, true, false, 25);// FS_SD, true / false, CS // if don't want to change the cs pin use -1 instead
 //ESPWebFileManager fileManager(FS_SD, true, true, 25, 23, 19, 18); // FS_SD, true / false, CS , MOSI, MISO, SCK
 #define DEBUG_SERIAL Serial
-const char *ssid = "Semicon Media";
-const char *password = "cracksen1605";
+const char *ssid = "Your_WiFi_SSID";
+const char *password = "Your_WiFi_Password";
 AsyncWebServer server(80);
 
 void setup() {
