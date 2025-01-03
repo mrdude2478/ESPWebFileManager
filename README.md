@@ -5,14 +5,17 @@
 <img src="https://github.com/jobitjoseph/ESPWebFileManager/blob/main/Images/Phone.jpg" width="" alt="alt_text" title="image_tooltip">
 
 ## Features
+
+- **Support for multiple file systems:** SPIFFS, LittleFS, FATFS, SD, and SD_MMC.
 - **File Management:** web interface for file management tasks such as upload, download, and delete.
-- - **Folder Management:** You can create or delete folders on LittleFS, FAT FS or SD card. Folders are not supported on SPIFFS.
+- **Folder Management:** You can create or delete folders on LittleFS, FAT FS or SD card. Folders are not supported on SPIFFS.
+- **Automatic file system formatting if mounting fails (Not available for SD card in SPI mode).#**
 
 ## Installation
 
 ### Arduino IDE
 1. Through Arduino Library Manager: In the Arduino library manager search for ESPWebFileManager and install.
-1. Manual Installation: Download the zip file and install it using `Sketch -> Include Library -> Add .ZIP Library` or Extract the zip file to the Arduino libraries folder.
+2. Manual Installation: Download the zip file and install it using `Sketch -> Include Library -> Add .ZIP Library` or Extract the zip file to the Arduino libraries folder.
 ### PlatformIO
 1. Add the library to your `platformio.ini`:
    ```ini
@@ -21,17 +24,76 @@
 
 ## Usage 
     
-Check the Example file provided. Libraray usage is now much easier. All you have to do is create the proper constructor at the start of the sketch and call the begin function in the setup. :
-   ```cpp
-   /*File System eg. FS_SPIFFS, Format the file system if mounting failed  true/false, (for FS_SD only)Reconfig SPI pins true/false, SPI pin CS, MOSI, MISO, SCK*/
-   //ESPWebFileManager fileManager(FS_SPIFFS, true);// FS_SPIFFS, true / false
-   ESPWebFileManager fileManager(FS_LITTLEFS, true);// FS_LITTLEFS, true / false
-   //ESPWebFileManager fileManager(FS_FATFS, true);// FS_FATFS, true / false
-   //ESPWebFileManager fileManager(FS_SD, true, false, 25);// FS_SD, true / false, CS // if you don't want to change the cs pin use -1 instead
-   //ESPWebFileManager fileManager(FS_SD, true, true, 25, 23, 19, 18); // FS_SD, true / false, CS , MOSI, MISO, SCK
+Check the Example file provided. Libraray usage is now much easier. All you have to do is include the header file and create the proper constructor at the start of the sketch and call the begin function in the setup. :
+### include the library in your sketch:
+
+```cpp
+#include "ESPWebFileManager.h"
 ```
 
-    
+---
+
+### Constructor Explanation
+The `ESPWebFileManager` class provides several constructors tailored to different file systems. Choose the one that fits your project.
+
+#### Constructor Options
+
+##### Common Parameters
+- **File System Types**: 
+  - `FS_SPIFFS`
+  - `FS_LITTLEFS`
+  - `FS_FATFS`
+  - `FS_SD`
+  - `FS_SD_MMC` (Only supported on ESP32 and ESP32-S3)
+- **Format on Fail**: Set to `true` to format the file system if mounting fails.
+
+##### Additional Options
+1. **For FS_SD:**
+   - Reconfigure SPI pins (`true/false`).
+   - Provide custom SPI pin configurations (CS, MOSI, MISO, SCK).
+2. **For FS_SD_MMC:**
+   - Specify line mode: 
+     - `1` for 1-bus mode.
+     - `4` for 4-bus mode.
+   - For ESP32: Use default pins for SD_MMC.
+   - For ESP32-S3: Provide custom pins (CLK, CMD, D0, and optionally D1, D2, D3 for 4-bus mode).
+
+---
+
+#### Example Constructor Usages
+Below are sample configurations for initializing the file manager. Uncomment the required configuration based on your file system and requirements:
+
+```cpp
+/* ESPWebFileManager Constructors */
+
+// File System: FS_SPIFFS
+ESPWebFileManager fileManager(FS_SPIFFS, true);  // Format on fail: true/false
+
+// File System: FS_LITTLEFS
+ESPWebFileManager fileManager(FS_LITTLEFS, true);  // Format on fail: true/false
+
+// File System: FS_FATFS
+ESPWebFileManager fileManager(FS_FATFS, true);  // Format on fail: true/false
+
+// File System: FS_SD with default SPI pins
+ESPWebFileManager fileManager(FS_SD, false, false);  // Format on fail: true/false, Reconfigure SPI: true/false
+
+// File System: FS_SD with custom SPI pins
+ESPWebFileManager fileManager(FS_SD, false, true, 10, 11, 13, 12); // CS, MOSI, MISO, SCK
+
+// File System: FS_SD_MMC (ESP32 Default Pins)
+ESPWebFileManager fileManager(FS_SD_MMC, true, 1);  // 1-bit mode
+ESPWebFileManager fileManager(FS_SD_MMC, true, 4);  // 4-bit mode
+
+// File System: FS_SD_MMC (ESP32-S3 Custom Pins)
+ESPWebFileManager fileManager(FS_SD_MMC, true, 1, 39, 40, 47);                // 1-bit mode, CLK, CMD, D0
+ESPWebFileManager fileManager(FS_SD_MMC, true, 4, 39, 40, 47, 21, 42, 41);     // 4-bit mode, CLK, CMD, D0, D1, D2, D3
+```
+
+---
+
+
+### Initialization    
 Call the begin function in the setup. :
    ```cpp
    fileManager.begin()
@@ -41,22 +103,6 @@ Call the begin function in the setup. :
 After uploading the code you can access the file manager through the URL `http:ipadrees/file`. for eg `192.168.0.124/file`
 ## Issues and Warnings
     Don't use files with way too long file names.
-
-## To Do
-    SD MMC support
-    File search Add a search bar to filter files and folders by name dynamically.
-    Sorting
-    Rename files
-    Multi-file selection and management
-    Drag and drop upload
-    Notifications
-    File Metadata
-    Edit file within the web UI
-    Real-Time Updates
-    ̌File preview Preview text files (e.g., .txt, .log) without downloading., Display image files (e.g., .jpg, .png) directly in the browser.
-    File system stats
-    
-
 
 ## License
 
