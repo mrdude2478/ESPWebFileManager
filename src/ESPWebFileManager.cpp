@@ -8,11 +8,11 @@
  * Project Brief: ESPWebFileManager Library
  * Author: Jobit Joseph @ https://github.com/jobitjoseph
  * IDE: Arduino IDE 2.x.x
- * Arduino Core: ESP32 Arduino Core V 3.0.7
+ * Arduino Core: ESP32 Arduino Core V 3.1.0
  * GitHub: https://github.com/jobitjoseph/ESPWebFileManager
  * Dependencies : 
- *                Async TCP Library for ESP32 V 3.2.14 @ https://github.com/mathieucarbou/AsyncTCP
- *                ESPAsyncWebServer Library V 2.2.6 @ https://github.com/mathieucarbou/ESPAsyncWebServer
+ *                Async TCP Library for ESP32 V 3.4.1 @ https://github.com/mathieucarbou/AsyncTCP
+ *                ESPAsyncWebServer Library V 3.4.3 @ https://github.com/mathieucarbou/ESPAsyncWebServer
  * Copyright © Jobit Joseph
  * 
  * This code is licensed under the following conditions:
@@ -37,66 +37,136 @@
  * DEALINGS IN THE SOFTWARE.
  *
  * Author: Jobit Joseph
- * Date: 19 December 2024
+ * Date: 03 January 2025
  *
  * For commercial use or licensing requests, please contact [jobitjoseph1@gmail.com].
  */
+
 #include "ESPWebFileManager.h"
-
 #include "SecData.h"
-
-#include <FS.h>
-
 #include <SPIFFS.h>
-
 #include <LittleFS.h>
-
-#include <FFat.h> // FATFS support
-
+#include <FFat.h>
 #include <SPI.h>
-
 #include <SD.h>
+#include <SD_MMC.h>
 
-// Constructor for SPIFFS, FATFS, or LittleFS
-ESPWebFileManager::ESPWebFileManager(int fsType, bool formatOnFailFlag): _fsType(fsType), _formatOnFailFlag(formatOnFailFlag), _SPIreconfig(false), _csPin(-1) {
-  for (int i = 0; i < 4; i++) _args[i] = -1;
+// Unified constructor for all file systems
+ESPWebFileManager::ESPWebFileManager(int fsType, bool formatOnFailFlag)
+    : _fsType(fsType), _formatOnFailFlag(formatOnFailFlag), _SPIreconfig(false),
+      _csPin(-1), _lineMode(1), _clk(-1), _cmd(-1), _d0(-1), _d1(-1), _d2(-1), _d3(-1) {
+    for (int i = 0; i < 4; i++) _args[i] = -1;
+
+    // Handle SD_MMC lineMode setup
+    if (fsType == FS_SD_MMC) {
+        DEBUG_PRINTLN("Defaulting to SD_MMC 1-line mode");
+        _lineMode = 1; // Default to 1-line mode for SD_MMC
+    }
 }
 
-// Constructor for SD Card with optional SPI remapping
-ESPWebFileManager::ESPWebFileManager(int fsType, bool formatOnFailFlag, bool SPIreconfig, int csPin, int mosi, int miso, int sck): _fsType(fsType), _formatOnFailFlag(formatOnFailFlag), _SPIreconfig(SPIreconfig), _csPin(csPin) {
-  _args[0] = csPin; // CS pin
-  _args[1] = mosi; // MOSI pin
-  _args[2] = miso; // MISO pin
-  _args[3] = sck; // SCK pin
+// Overloaded constructor for SD card with SPI pin remapping
+ESPWebFileManager::ESPWebFileManager(int fsType, bool formatOnFailFlag, bool SPIreconfig, int csPin, int mosi, int miso, int sck)
+    : _fsType(fsType), _formatOnFailFlag(formatOnFailFlag), _SPIreconfig(SPIreconfig), _csPin(csPin) {
+    _args[0] = csPin;
+    _args[1] = mosi;
+    _args[2] = miso;
+    _args[3] = sck;
 }
 
-// Public begin function to initialize the chosen file system
+// Overloaded constructor for SD_MMC (ESP32)
+ESPWebFileManager::ESPWebFileManager(int fsType, bool formatOnFailFlag, int lineMode)
+    : _fsType(fsType), _formatOnFailFlag(formatOnFailFlag), _lineMode(lineMode),
+      _clk(-1), _cmd(-1), _d0(-1), _d1(-1), _d2(-1), _d3(-1) {}
+
+// Overloaded constructor for SD_MMC (ESP32-S3)
+ESPWebFileManager::ESPWebFileManager(int fsType, bool formatOnFailFlag, int lineMode, int clk, int cmd, int d0, int d1, int d2, int d3)
+    : _fsType(fsType), _formatOnFailFlag(formatOnFailFlag), _lineMode(lineMode),
+      _clk(clk), _cmd(cmd), _d0(d0), _d1(d1), _d2(d2), _d3(d3) {}
+
+
+bool ESPWebFileManager::initSD_MMC() {
+    DEBUG_PRINTLN("Initializing SD_MMC...");
+
+    if (_clk != -1 && _cmd != -1 && _d0 != -1) {
+        DEBUG_PRINTLN("Configuring SD_MMC pins for ESP32-S3...");
+
+        // Set pins based on line mode
+        if (_lineMode == 1) {
+            if (!SD_MMC.setPins(_clk, _cmd, _d0)) { // 1-bit mode
+                DEBUG_PRINTLN("Pin change failed for 1-bit mode!");
+                memory_ready = false;
+                return false;
+            }
+        } else if (_lineMode == 4) {
+            if (!SD_MMC.setPins(_clk, _cmd, _d0, _d1, _d2, _d3)) { // 4-bit mode
+                DEBUG_PRINTLN("Pin change failed for 4-bit mode!");
+                memory_ready = false;
+                return false;
+            }
+        } else {
+            DEBUG_PRINTLN("Invalid line mode!");
+            memory_ready = false;
+            return false;
+        }
+    } else {
+        DEBUG_PRINTLN("Using default pins for ESP32...");
+    }
+
+    // Initialize SD_MMC with the appropriate line mode
+    if (!SD_MMC.begin("/sdcard", _lineMode == 1, _formatOnFailFlag, SDMMC_FREQ_DEFAULT)) {
+        DEBUG_PRINTLN("Card Mount Failed.");
+        DEBUG_PRINTLN("Increase log level to see more info: Tools > Core Debug Level > Verbose");
+        DEBUG_PRINTLN("Make sure all data pins have a 10k Ohm pull-up resistor to 3.3V");
+        memory_ready = false;
+        return false;
+    }
+
+    // Check card type
+    uint8_t cardType = SD_MMC.cardType();
+    if (cardType == CARD_NONE) {
+        DEBUG_PRINTLN("No SD card attached.");
+        memory_ready = false;
+        return false;
+    }
+
+    DEBUG_PRINT("SD Card Type: ");
+    switch (cardType) {
+        case CARD_MMC:
+            DEBUG_PRINTLN("MMC");
+            break;
+        case CARD_SD:
+            DEBUG_PRINTLN("SDSC");
+            break;
+        case CARD_SDHC:
+            DEBUG_PRINTLN("SDHC");
+            break;
+        default:
+            DEBUG_PRINTLN("UNKNOWN");
+            break;
+    }
+
+    DEBUG_PRINTLN("SD_MMC Mounted Successfully!");
+    memory_ready = true;
+    current_fs = &SD_MMC;
+    return true;
+}
+
 bool ESPWebFileManager::begin() {
-  switch (_fsType) {
-  case FS_SPIFFS:
-    return initFileSystem(SPIFFS, "SPIFFS", [] {
-      return SPIFFS.begin();
-    }, [] {
-      return SPIFFS.format();
-    });
-  case FS_LITTLEFS:
-    return initFileSystem(LittleFS, "LittleFS", [] {
-      return LittleFS.begin();
-    }, [] {
-      return LittleFS.format();
-    });
-  case FS_FATFS:
-    return initFileSystem(FFat, "FATFS", [] {
-      return FFat.begin();
-    }, [] {
-      return FFat.format();
-    });
-  case FS_SD:
-    return initSD(); // SD initialization remains separate due to SPI handling
-  default:
-    DEBUG_PRINTLN("Invalid file system type.");
-    return false;
-  }
+    switch (_fsType) {
+        case FS_SD_MMC:
+            return initSD_MMC();
+        case FS_SPIFFS:
+            return initFileSystem(SPIFFS, "SPIFFS", [] { return SPIFFS.begin(); }, [] { return SPIFFS.format(); });
+        case FS_LITTLEFS:
+            return initFileSystem(LittleFS, "LittleFS", [] { return LittleFS.begin(); }, [] { return LittleFS.format(); });
+        case FS_FATFS:
+            return initFileSystem(FFat, "FATFS", [] { return FFat.begin(); }, [] { return FFat.format(); });
+        case FS_SD:
+            return initSD();
+        default:
+            DEBUG_PRINTLN("Invalid file system type.");
+            return false;
+    }
 }
 
 // Generic file system initialization

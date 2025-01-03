@@ -1,3 +1,47 @@
+/* 
+ * ESPWebFileManager Library
+ * Copyright (C) 2024 Jobit Joseph
+ * Licensed under the Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International (CC BY-NC-SA 4.0)
+ * You may not use this work for commercial purposes. Modifications must credit the original author.
+ * See the LICENSE file for more details.
+ * Project Name: ESPWebFileManager Library
+ * Project Brief: ESPWebFileManager Library
+ * Author: Jobit Joseph @ https://github.com/jobitjoseph
+ * IDE: Arduino IDE 2.x.x
+ * Arduino Core: ESP32 Arduino Core V 3.1.0
+ * GitHub: https://github.com/jobitjoseph/ESPWebFileManager
+ * Dependencies : 
+ *                Async TCP Library for ESP32 V 3.4.1 @ https://github.com/mathieucarbou/AsyncTCP
+ *                ESPAsyncWebServer Library V 3.4.3 @ https://github.com/mathieucarbou/ESPAsyncWebServer
+ * Copyright © Jobit Joseph
+ * 
+ * This code is licensed under the following conditions:
+ *
+ * 1. Non-Commercial Use:
+ * This program is free software: you can redistribute it and/or modify it
+ * for personal or educational purposes under the condition that credit is given 
+ * to the original author. Attribution is required, and the original author 
+ * must be credited in any derivative works or distributions.
+ *
+ * 2. Commercial Use:
+ * For any commercial use of this software, you must obtain a separate license
+ * from the original author. Contact the author for permissions or licensing
+ * options before using this software for commercial purposes.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, 
+ * FITNESS FOR A PARTICULAR PURPOSE, AND NONINFRINGEMENT. IN NO EVENT SHALL 
+ * THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES, OR OTHER 
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT, OR OTHERWISE, ARISING 
+ * FROM, OUT OF, OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER 
+ * DEALINGS IN THE SOFTWARE.
+ *
+ * Author: Jobit Joseph
+ * Date: 03 January 2025
+ *
+ * For commercial use or licensing requests, please contact [jobitjoseph1@gmail.com].
+ */
+
 #ifndef WEBPAGE_H
 #define WEBPAGE_H
 const size_t SecData_len = 6425;

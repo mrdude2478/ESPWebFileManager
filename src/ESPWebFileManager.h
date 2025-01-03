@@ -1,4 +1,4 @@
-/*
+/* 
  * ESPWebFileManager Library
  * Copyright (C) 2024 Jobit Joseph
  * Licensed under the Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International (CC BY-NC-SA 4.0)
@@ -8,11 +8,11 @@
  * Project Brief: ESPWebFileManager Library
  * Author: Jobit Joseph @ https://github.com/jobitjoseph
  * IDE: Arduino IDE 2.x.x
- * Arduino Core: ESP32 Arduino Core V 3.0.7
+ * Arduino Core: ESP32 Arduino Core V 3.1.0
  * GitHub: https://github.com/jobitjoseph/ESPWebFileManager
  * Dependencies : 
- *                Async TCP Library for ESP32 V 3.2.14 @ https://github.com/mathieucarbou/AsyncTCP
- *                ESPAsyncWebServer Library V 2.2.6 @ https://github.com/mathieucarbou/ESPAsyncWebServer
+ *                Async TCP Library for ESP32 V 3.4.1 @ https://github.com/mathieucarbou/AsyncTCP
+ *                ESPAsyncWebServer Library V 3.4.3 @ https://github.com/mathieucarbou/ESPAsyncWebServer
  * Copyright © Jobit Joseph
  * 
  * This code is licensed under the following conditions:
@@ -37,20 +37,25 @@
  * DEALINGS IN THE SOFTWARE.
  *
  * Author: Jobit Joseph
- * Date: 19 December 2024
+ * Date: 03 January 2025
  *
  * For commercial use or licensing requests, please contact [jobitjoseph1@gmail.com].
  */
+
 #ifndef ESP_WEB_FILE_MANAGER_H
 #define ESP_WEB_FILE_MANAGER_H
 
 #include <AsyncTCP.h>
 #include <ESPAsyncWebServer.h>
+#include <FS.h>
+#include <SD_MMC.h>
+
 // Define file system types
 #define FS_SPIFFS 1
 #define FS_SD 2
 #define FS_LITTLEFS 3
 #define FS_FATFS 4
+#define FS_SD_MMC 5 // New file system type for SD_MMC
 
 #define EN_DEBUG
 #define DEBUG_SERIAL Serial
@@ -63,42 +68,42 @@
 #else
 #define DEBUG_PRINTLN(x)
 #define DEBUG_PRINT(x)
+#define DEBUG_PRINT2(x, y)
+#define DEBUG_PRINTX(...)
 #endif
 
 class ESPWebFileManager {
 public:
-    // Constructor for SPIFFS, FATFS, or LittleFS (only one variable needed)
-    ESPWebFileManager(int fsType, bool formatOnFailFlag);
-
-    // Constructor for SD card with SPI pin remapping and arguments
+    ESPWebFileManager(int fsType, bool formatOnFailFlag); // Single constructor for all file systems
     ESPWebFileManager(int fsType, bool formatOnFailFlag, bool SPIreconfig, int csPin = -1, int mosi = -1, int miso = -1, int sck = -1);
+    ESPWebFileManager(int fsType, bool formatOnFailFlag, int lineMode);
+    ESPWebFileManager(int fsType, bool formatOnFailFlag, int lineMode, int clk, int cmd, int d0, int d1 = -1, int d2 = -1, int d3 = -1);
 
-    // Public function to initialize the file system
     bool begin();
-
-    String sanitizePath(const String& path);
-
+    String sanitizePath(const String &path);
     void setServer(AsyncWebServer *server);
-
     void listDir(const char *dirname, uint8_t levels);
-    
     int getFsType();
+
 private:
     FS *current_fs = nullptr;
     bool memory_ready = false;
     String str_data = "";
     AsyncWebServer *_server = nullptr;
-    //FileSystemType fs_type = FS_UNKNOWN;
-    int _fsType;          // File system type
-    bool _formatOnFailFlag;       // Common flag
-    bool _SPIreconfig;      // Extra flag to remap SPI pins for SD Card
-    int _args[4];         // CS pin, MOSI, MISO, and SCK for SD card
 
-    int _csPin;           // Temporary CS pin variable
+    int _fsType;
+    bool _formatOnFailFlag;
+    bool _SPIreconfig;
+    int _args[4];
+    int _csPin;
+
+    int _lineMode;
+    int _clk, _cmd, _d0, _d1, _d2, _d3;
 
     bool initFileSystem(fs::FS &fs, const char *fsName, std::function<bool()> beginFn, std::function<bool()> formatFn);
-
     bool initSD();
+    bool initSD_MMC();
 };
+
 
 #endif
