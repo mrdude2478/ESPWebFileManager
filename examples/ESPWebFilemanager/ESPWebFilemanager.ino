@@ -90,8 +90,8 @@ ESPWebFileManager fileManager(FS_LITTLEFS, true);  // FS_LITTLEFS, true/false
 
 
 #define DEBUG_SERIAL Serial
-const char *ssid = "SKYNET2G";
-const char *password = "jobitjos";
+const char *ssid = "YourSSID";
+const char *password = "YourWiFiPassword";
 AsyncWebServer server(80);
 
 void setup() {
