@@ -100,7 +100,7 @@ Call the begin function in the setup. :
 ```
 
 
-After uploading the code you can access the file manager through the URL `http:ipadrees/file`. for eg `192.168.0.124/file`
+After uploading the code, you can access the file manager through the URL **`http://ipadrees/file`**. for eg **`http://192.168.0.124/file`**
 ## Issues and Warnings
     Don't use files with way too long file names.
 
