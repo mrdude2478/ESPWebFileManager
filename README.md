@@ -109,5 +109,5 @@ After uploading the code, you can access the file manager through the URL **`htt
  *EspWebFileManager Library
  * Copyright (C) 2024 Jobit Joseph
  * Licensed under the Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International (CC BY-NC-SA 4.0)
- * You may not use this work for commercial purposes. Modifications must credit the original author.
+ * You may not use this work for commercial purposes without permission from the original author. Modifications must credit the original author.
  * See the LICENSE file for more details.
