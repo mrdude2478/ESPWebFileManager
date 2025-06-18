@@ -84,6 +84,7 @@ public:
     void setServer(AsyncWebServer *server);
     void listDir(const char *dirname, uint8_t levels);
     int getFsType();
+    bool deleteRecursive(fs::FS &fs, const String &path);
 
 private:
     FS *current_fs = nullptr;
